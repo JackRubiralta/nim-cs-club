@@ -1,9 +1,44 @@
-Here's an updated version of the code with two interactive modes:
+# Nim Game Instructions and Coding Exercise
 
-1. **Play against the AI** - You take turns with the AI, which uses the minimax strategy to select its moves.
-2. **Play against another player** - Allows two players to take turns without AI intervention.
+## Game Rules
+
+In the parlor game **Nim**, there are two players and **two piles of matches**. The game rules are simple:
+1. Players take turns, with each player removing some (non-zero) number of matches from only **one pile**.
+2. The **player who removes the last match wins** the game.
+
+### Objective
+Your task is to:
+1. Prove a winning strategy for the **second player** using **strong induction**.
+2. Complete the **minimax function** to create a simple AI for Nim.
 
 ---
+
+## Part 1: Proving a Winning Strategy Using Strong Induction
+
+To solve Nim, you’ll need to prove that the **second player has a winning strategy** if both piles start with the same number of matches. Use **strong induction** to show that the second player can always win if they play optimally.
+
+### Induction Proof Outline
+
+1. **Base Case**:
+   - Start by considering the smallest possible game (for example, 1 match in each pile) and determine the winning move for the second player.
+
+2. **Inductive Hypothesis**:
+   - Assume that the second player has a winning strategy for any game that starts with two piles of `n` matches each.
+   
+3. **Inductive Step**:
+   - Prove that this strategy also works if each pile has `n + 1` matches.
+
+Once you've completed this proof, you’ll be ready to implement the strategy in code!
+
+---
+
+## Part 2: Completing the Minimax Function for Nim
+
+To implement this strategy as an AI, you’ll create a `minimax` function that evaluates possible moves and returns the best choice for the current player.
+
+### Code Skeleton for `minimax`
+
+Below is a partially completed version of the **Nim** class and the **minimax** function. Follow the comments to complete each step.
 
 ```python
 import copy
@@ -39,6 +74,7 @@ class Nim:
         # Display the current state of the piles
         print(f"Piles: {self.pile1} and {self.pile2}")
 
+# Function to evaluate the best move using minimax
 def minimax(game, is_current_player_turn):
     # Base case: if the game is over, return -1 if it's the current player's turn (loss), +1 otherwise (win)
     if game.is_terminal():
@@ -69,10 +105,12 @@ def minimax(game, is_current_player_turn):
 
     return best_score
 
+# Testing function to display evaluation of each move
 def minimax_solver(game):
     # Find the best move for the current player (assuming it’s their turn)
     best_score = float('-inf')
     best_move = None
+    print("Evaluating moves and scores:")
     for move in game.get_possible_moves():
         # Create a deep copy of the game state and apply the move
         new_game = copy.deepcopy(game)
@@ -80,14 +118,27 @@ def minimax_solver(game):
 
         # Evaluate this move using minimax
         score = minimax(new_game, False)  # Assume opponent's turn next
+        print(f"Move: {move}, Score: {score}")
 
         # Update the best score and best move
         if score > best_score:
             best_score = score
             best_move = move
 
+    print(f"Best move: {best_move} with score: {best_score}")
     return best_move
+```
 
+---
+
+## Game Modes: Play Against AI or Another Player
+
+Once you have completed the `minimax` function, you can play Nim in two modes:
+
+1. **Play against AI** - You take turns with the AI, which uses the minimax strategy to choose moves.
+2. **Play against another player** - Two players take turns without AI intervention.
+
+```python
 # Play against AI mode
 def play_against_ai():
     game = Nim(5, 5)  # Start with 5 matches in each pile
@@ -156,21 +207,45 @@ main()
 
 ---
 
-### Explanation of the Game Modes
+## Testing Minimax Implementation
 
-1. **`play_against_ai()`**:
-   - You take turns with the AI, which uses `minimax_solver` to determine its moves.
-   - Each player (human and AI) chooses a pile and removes a number of matches, and the game displays the new state after each move.
-   - The game ends when one pile is empty, and the winner is declared.
+Use the test cases below to verify the correctness of your `minimax` function.
 
-2. **`play_against_player()`**:
-   - This mode allows two players to take turns without AI intervention.
-   - Each player selects a pile and the number of matches to remove, and the game continues until one pile is empty.
-   - The player who removes the last match is declared the winner.
+```python
+# Tests for minimax and nim game logic
+def test_minimax():
+    # Test Case 1: Simple win for the second player
+    game1 = Nim(1, 1)
+    assert minimax(game1, True) == -1, "Test Case 1 Failed"  # First player loses
 
-3. **`main()`**:
-   - This function allows the user to choose between playing against the AI or another player.
+    # Test Case 2: Larger game where first player has advantage
+    game2 = Nim(3, 3)
+    assert minimax(game2, True) == 1, "Test Case 2 Failed"  # First player can win
+
+    # Test Case 3: Mixed piles where minimizing player should lose
+    game3 = Nim(2, 1)
+    assert minimax(game3, False) == -1, "Test Case 3 Failed"  # Second player can force a loss
+
+    print("All test cases passed!")
+
+# Run the tests
+test_minimax()
+```
+
+### Instructions
+
+1. **Fill in `minimax()`**:
+   - Complete each step following the comments.
+   - Use `copy.deepcopy()` for copying the game state and recursively call `minimax` for toggling player turns.
+
+2. **Run the Tests**:
+   - Run `test_minimax()` to confirm that your `minimax` function works correctly for each test case.
+
+3. **Choose a Mode**:
+   - Use `main()` to choose between playing against the AI or another player.
 
 ---
 
-This setup provides a hands-on way to play Nim and test the minimax-based AI. You can use this version in your CS club to demonstrate both player vs. player and player vs. AI modes, and it’s especially useful for testing strategies discussed in your induction proof!
+This
+
+ exercise will help you understand **strong induction** and **minimax algorithms** in game theory. Enjoy playing Nim and testing your strategies!
