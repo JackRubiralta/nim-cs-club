@@ -95,9 +95,12 @@ def minimax(game, is_current_player_turn):
         new_game.make_move(move)
 
         # Step 3: Recursively call minimax on the new game state for the opponent's turn
+        # Hint: Toggle is_current_player_turn for the next level in recursion
         score = minimax(new_game, not is_current_player_turn)
 
         # Step 4: Update best_score based on maximizing or minimizing
+        # Hint: If it's the current player's turn, look for the highest score;
+        # otherwise, look for the lowest score.
         if is_current_player_turn:
             best_score = max(best_score, score)
         else:
@@ -129,87 +132,18 @@ def minimax_solver(game):
     return best_move
 ```
 
----
+### Instructions
 
-## Game Modes: Play Against AI or Another Player
+1. **Fill in `minimax()`**:
+   - Follow the comments in `minimax` to complete each step.
+   - For **Step 1**, copy the game state using `copy.deepcopy()`.
+   - For **Step 2**, apply the move on the copied game state with `new_game.make_move(move)`.
+   - For **Step 3**, call `minimax` recursively for the next player’s turn by toggling `is_current_player_turn`.
+   - For **Step 4**, update `best_score` by finding the highest score if it’s the maximizing player’s turn, or the lowest if it’s the minimizing player’s turn.
 
-Once you have completed the `minimax` function, you can play Nim in two modes:
-
-1. **Play against AI** - You take turns with the AI, which uses the minimax strategy to choose moves.
-2. **Play against another player** - Two players take turns without AI intervention.
-
-```python
-# Play against AI mode
-def play_against_ai():
-    game = Nim(5, 5)  # Start with 5 matches in each pile
-    print("Welcome to Nim! You’re playing against the AI.")
-    game.display_state()
-
-    while not game.is_terminal():
-        # Player's turn
-        print("\nYour Turn:")
-        pile = int(input("Choose pile (1 or 2): "))
-        matches = int(input("Choose number of matches to remove: "))
-        game.make_move((pile, matches))
-        game.display_state()
-        if game.is_terminal():
-            print("Congratulations! You won!")
-            break
-
-        # AI's turn
-        print("\nAI's Turn:")
-        ai_move = minimax_solver(game)
-        game.make_move(ai_move)
-        print(f"AI chose to remove {ai_move[1]} matches from pile {ai_move[0]}.")
-        game.display_state()
-        if game.is_terminal():
-            print("The AI won! Better luck next time.")
-            break
-
-# Play against another player mode
-def play_against_player():
-    game = Nim(5, 5)  # Start with 5 matches in each pile
-    print("Welcome to Nim! Two players will take turns.")
-    game.display_state()
-
-    current_player = 1
-    while not game.is_terminal():
-        print(f"\nPlayer {current_player}'s Turn:")
-        pile = int(input("Choose pile (1 or 2): "))
-        matches = int(input("Choose number of matches to remove: "))
-        game.make_move((pile, matches))
-        game.display_state()
-        
-        if game.is_terminal():
-            print(f"Player {current_player} wins! Congratulations!")
-            break
-
-        # Switch player
-        current_player = 2 if current_player == 1 else 1
-
-# Main function to choose game mode
-def main():
-    print("Choose a game mode:")
-    print("1. Play against AI")
-    print("2. Play against another player")
-    choice = input("Enter 1 or 2: ")
-    
-    if choice == '1':
-        play_against_ai()
-    elif choice == '2':
-        play_against_player()
-    else:
-        print("Invalid choice. Please enter 1 or 2.")
-
-# Run the game
-main()
-```
-
----
-
-## Testing Minimax Implementation
-
-Use the test cases below to verify the correctness of your `minimax` function.
+2. **Run the Tests**:
+   - The tests below will help verify the correctness of your minimax implementation.
+   - Run these tests to confirm that the AI behaves as expected.
 
 ```python
 # Tests for minimax and nim game logic
@@ -232,20 +166,10 @@ def test_minimax():
 test_minimax()
 ```
 
-### Instructions
+### Try It Out
 
-1. **Fill in `minimax()`**:
-   - Complete each step following the comments.
-   - Use `copy.deepcopy()` for copying the game state and recursively call `minimax` for toggling player turns.
+1. **Run `test_minimax()`** to confirm your `minimax` function works correctly. Each test case represents a different game configuration to validate the expected winning or losing outcome.
 
-2. **Run the Tests**:
-   - Run `test_minimax()` to confirm that your `minimax` function works correctly for each test case.
+2. **Use `minimax_solver()`** to observe the AI’s move evaluations for any game state you define. Try experimenting with different pile sizes to see how the AI’s optimal moves align with your induction-based strategy.
 
-3. **Choose a Mode**:
-   - Use `main()` to choose between playing against the AI or another player.
-
----
-
-This
-
- exercise will help you understand **strong induction** and **minimax algorithms** in game theory. Enjoy playing Nim and testing your strategies!
+This exercise will strengthen your understanding of both **strong induction** and the **minimax algorithm** as applied to game theory. Good luck and have fun!
