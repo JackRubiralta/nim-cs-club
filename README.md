@@ -1,3 +1,7 @@
+Certainly! Here’s the full Markdown file with the addition of the interactive **Play Against AI** and **Play Against Another Player** modes at the end.
+
+---
+
 # Nim Game Instructions and Coding Exercise
 
 ## Game Rules
@@ -74,37 +78,33 @@ class Nim:
         # Display the current state of the piles
         print(f"Piles: {self.pile1} and {self.pile2}")
 
-# Function to evaluate the best move using minimax
+# Incomplete minimax function with comments only
 def minimax(game, is_current_player_turn):
     # Base case: if the game is over, return -1 if it's the current player's turn (loss), +1 otherwise (win)
     if game.is_terminal():
+        # Check if it's the current player's turn and return the appropriate score
         return -1 if is_current_player_turn else 1
 
-    # Initialize the best score based on whose turn it is
+    # Initialize the best score depending on the player's turn
     if is_current_player_turn:
-        best_score = float('-inf')  # Maximizing player’s best score
+        # For the maximizing player, start with a very low score
+        best_score = float('-inf')
     else:
-        best_score = float('inf')   # Minimizing player’s best score
+        # For the minimizing player, start with a very high score
+        best_score = float('inf')
 
-    # Loop over each possible move
+    # Loop through each possible move
     for move in game.get_possible_moves():
-        # Step 1: Create a deep copy of the game state
-        new_game = copy.deepcopy(game)
-
+        # Step 1: Copy the game state (hint: use copy.deepcopy)
+        
         # Step 2: Apply the move on the copied game state
-        new_game.make_move(move)
-
-        # Step 3: Recursively call minimax on the new game state for the opponent's turn
-        # Hint: Toggle is_current_player_turn for the next level in recursion
-        score = minimax(new_game, not is_current_player_turn)
-
-        # Step 4: Update best_score based on maximizing or minimizing
-        # Hint: If it's the current player's turn, look for the highest score;
-        # otherwise, look for the lowest score.
-        if is_current_player_turn:
-            best_score = max(best_score, score)
-        else:
-            best_score = min(best_score, score)
+        
+        # Step 3: Call minimax on the new game state, but for the next player's turn
+        # Remember to toggle is_current_player_turn to switch turns
+        
+        # Step 4: Update best_score based on whether it’s the maximizing or minimizing player's turn
+        # Hint: If it's the maximizing player's turn, find the highest score.
+        # If it's the minimizing player's turn, find the lowest score.
 
     return best_score
 
@@ -166,10 +166,92 @@ def test_minimax():
 test_minimax()
 ```
 
-### Try It Out
+---
 
-1. **Run `test_minimax()`** to confirm your `minimax` function works correctly. Each test case represents a different game configuration to validate the expected winning or losing outcome.
+## Part 3: Interactive Game Modes
 
-2. **Use `minimax_solver()`** to observe the AI’s move evaluations for any game state you define. Try experimenting with different pile sizes to see how the AI’s optimal moves align with your induction-based strategy.
+Once you've completed the `minimax` function and verified its correctness with tests, try playing Nim in one of the following modes:
 
-This exercise will strengthen your understanding of both **strong induction** and the **minimax algorithm** as applied to game theory. Good luck and have fun!
+### Play Against the AI
+In this mode, you’ll play against an AI that uses the minimax strategy to select moves.
+
+```python
+def play_against_ai():
+    game = Nim(5, 5)  # Start with 5 matches in each pile
+    print("Welcome to Nim! You’re playing against the AI.")
+    game.display_state()
+
+    while not game.is_terminal():
+        # Player's turn
+        print("\nYour Turn:")
+        pile = int(input("Choose pile (1 or 2): "))
+        matches = int(input("Choose number of matches to remove: "))
+        game.make_move((pile, matches))
+        game.display_state()
+        if game.is_terminal():
+            print("Congratulations! You won!")
+            break
+
+        # AI's turn
+        print("\nAI's Turn:")
+        ai_move = minimax_solver(game)
+        game.make_move(ai_move)
+        print(f"AI chose to remove {ai_move[1]} matches from pile {ai_move[0]}.")
+        game.display_state()
+        if game.is_terminal():
+            print("The AI won! Better luck next time.")
+            break
+```
+
+### Play Against Another Player
+In this mode, you can play against a friend without AI intervention.
+
+```python
+def play_against_player():
+    game = Nim(5, 5)  # Start with 5 matches in each pile
+    print("Welcome to Nim! Two players will take turns.")
+    game.display_state()
+
+    current_player = 1
+    while not game.is_terminal():
+        print(f"\nPlayer {current_player}'s Turn:")
+        pile = int(input("Choose pile (1 or 2): "))
+        matches = int(input("Choose number of matches to remove: "))
+        game.make_move((pile, matches))
+        game.display_state()
+        
+        if game.is_terminal():
+            print(f"Player {current_player} wins! Congratulations!")
+            break
+
+        # Switch player
+        current_player = 2 if current_player == 1 else 1
+```
+
+### Main Menu to Choose Game Mode
+
+Use this main function to choose between playing against the AI or another player.
+
+```python
+def main():
+    print("Choose a game mode:")
+    print("1.
+
+ Play against AI")
+    print("2. Play against another player")
+    choice = input("Enter 1 or 2: ")
+    
+    if choice == '1':
+        play_against_ai()
+    elif choice == '2':
+        play_against_player()
+    else:
+        print("Invalid choice. Please enter 1 or 2.")
+
+# Run the game
+main()
+```
+
+---
+
+This exercise will help you understand both **strong induction** and the **minimax algorithm** in game theory. Test your skills by playing Nim against the AI or a friend. Good luck and have fun!
